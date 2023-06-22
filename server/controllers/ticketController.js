@@ -4,13 +4,10 @@ exports.generateTicket = async (req, res) => {
   const { passengerName, source, destination, busNumber } = req.body;
 
   try {
-
     const ticketCode = generateTicketCode();
-
     const query = `INSERT INTO tickets (ticket_code, passenger_name, source, destination, bus_number) 
                    VALUES (?, ?, ?, ?, ?)`;
     const values = [ticketCode, passengerName, source, destination, busNumber];
-
     await db.query(query, values);
 
     res.status(201).json({ ticketCode });
@@ -20,9 +17,10 @@ exports.generateTicket = async (req, res) => {
   }
 };
 
-
+//retrieve ticket
 exports.getTicket = async (req, res) => {
   const { ticketCode } = req.params;
+  console.log(ticketCode);
 
   try {
     const query = `SELECT * FROM tickets WHERE ticket_code = ?`;
@@ -35,11 +33,9 @@ exports.getTicket = async (req, res) => {
       res.status(200).json({ ticket });
     }
   } catch (error) {
-    console.error("Error retrieving ticket:", error);
     res.status(500).json({ error: "Failed to retrieve ticket." });
   }
 };
-
 
 function generateTicketCode() {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
